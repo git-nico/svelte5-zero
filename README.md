@@ -104,6 +104,10 @@ There is a way to host a static site on **Github**
 > export default config;
 > ```
 
+## Deployment
+
+To deploy
+
 > **_.github/workflows/deploy.yml_**
 >
 > ```yaml
