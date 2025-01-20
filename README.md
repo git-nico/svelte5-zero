@@ -68,19 +68,97 @@ pnpm dlx http-server
 
 # Hosting on Github
 
-There is a way to host a static site on **Github**  
-Github uses **Jekyll** as the http server. It is therefor adviced to install **Jekyll** also locally to test the site.
+There is a way to host a static site on **Github**
 
-```sh
-pnpm add -D Jekyll
-```
-
-> **_package.json_**
+> **_svelte.config.js_**
 >
-> ```json
-> {
-> 	"scripts": {
-> 		"jekyll": "jekyll serve"
-> 	}
-> }
+> ```javascript
+> import adapter from '@sveltejs/adapter-static';
+> import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+> import { mdsvex } from 'mdsvex';
+>
+> /** @type {import('@sveltejs/kit').Config} */
+> const config = {
+> 	// Consult https://svelte.dev/docs/kit/integrations
+> 	// for more information about preprocessors
+> 	preprocess: [vitePreprocess(), mdsvex()],
+>
+> 	kit: {
+> 		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
+> 		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
+> 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+> 		adapter: adapter({
+> 			pages: 'docs',
+> 			assets: 'docs',
+> 			fallback: '404.html',
+> 		}),
+> 		appDir: 'app',
+> 	},
+> 	paths: {
+> 		base: process.argv.includes('dev') ? '' : process.env.BASE_PATH,
+> 	},
+>
+> 	extensions: ['.svelte', '.svx'],
+> };
+>
+> export default config;
+> ```
+
+> **_.github/workflows/deploy.yml_**
+>
+> ```yaml
+> name: Deploy to GitHub Pages
+>
+> on:
+>  push:
+>    branches: ["main"]
+>
+> jobs:
+>  build_site:
+>    runs-on: ubuntu-latest
+>    steps:
+>      - name: Checkout
+>        uses: actions/checkout@v4
+>
+>      # If you're using pnpm, add this step then change the commands and cache key below to use `pnpm`
+>      - name: Install pnpm
+>        uses: pnpm/action-setup@v3
+>        with:
+>          version: 9
+>
+>      - name: Install Node.js
+>        uses: actions/setup-node@v4
+>        with:
+>          node-version: 20
+>          cache: pnpm
+>
+>      - name: Install dependencies
+>        run: pnpm install
+>
+>      - name: build
+>        env:
+>          BASE_PATH: "/${{ github.event.repository.name }}"
+>        run: pnpm run build
+>      - name: Upload Artifacts
+>        uses: actions/upload-pages-artifact@v3
+>        with:
+>          # this should match the `pages` option in your adapter-static options
+>          path: "docs/"
+>
+>  deploy:
+>    needs: build_site
+>    runs-on: ubuntu-latest
+>
+>    permissions:
+>      pages: write
+>      id-token: write
+>
+>    environment:
+>      name: github-pages
+>      url: ${{ steps.deployment.outputs.page_url }}
+>
+>    steps:
+>      - name: Deploy
+>        id: deployment
+>        uses: actions/deploy-pages@v4
 > ```

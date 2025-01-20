@@ -16,5 +16,3 @@
 </nav>
 
 {@render children()}
-
-Nico
