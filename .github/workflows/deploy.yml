@@ -15,7 +15,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 9
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -38,7 +38,7 @@ jobs:
 
   deploy:
     needs: build_site
-    runs-on: "24.04"
+    runs-on: ubuntu-latest
 
     permissions:
       pages: write
