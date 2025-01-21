@@ -1,5 +1,5 @@
-[Basics](https://youtu.be/Ti3IBf6UNSI)
-
+[Basics](https://youtu.be/Ti3IBf6UNSI)  
+[A Simple App - QR Code](https://youtu.be/k16I2Z7ORZw)  
 # SSR
 
 Sveltekit uses SSR (Server Side Rendering) by default.
@@ -106,7 +106,19 @@ There is a way to host a static site on **Github**
 
 ## Deployment
 
-To deploy
+To deploy to Github, first you need to publish the project to Github.
+
+-   goto settings
+-   select pages
+-   choose the correct branch
+-   choose the folder (your site was built in)
+-   click Save
+
+That's it. It can take some time before the site is up and running
+
+![alt text](github-pages.png)
+
+### Automatically deploy changes
 
 > **_.github/workflows/deploy.yml_**
 >
@@ -166,3 +178,5 @@ To deploy
 >        id: deployment
 >        uses: actions/deploy-pages@v4
 > ```
+
+# Simple App - QR Code generato
